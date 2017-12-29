@@ -4,7 +4,7 @@
 
   - name: Update all packages to the latest version
     apt:
-      upgrade: dist
+      #upgrade: dist
       update_cache: yes
 
   - name: Ensure docker packages are not present

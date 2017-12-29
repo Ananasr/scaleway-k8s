@@ -4,7 +4,7 @@
     name: "{{ item }}"
     state: restarted
   with_items:
-    - tinc@meshvpn
+    #- tinc@meshvpn
     - tinc
 
 - name: reload tinc
@@ -12,5 +12,5 @@
     name: "{{ item }}"
     state: reloaded
   with_items:
-    - tinc@meshvpn
+    #- tinc@meshvpn
     - tinc

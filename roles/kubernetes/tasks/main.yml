@@ -139,7 +139,7 @@
     when: inventory_hostname != groups["masters"]
 
   - name: Joining cluster on other nodes
-    shell: "kubeadm join --token={{ hostvars[groups['masters'][0]]['token'].stdout_lines[1] }} {{ hostvars[groups['masters'][0]]['vpn_ip'] }}:{{ kubernetes_port }}"
+    shell: "kubeadm join --token={{ hostvars[groups['masters'][0]]['token'].stdout_lines[1] }} {{ hostvars[groups['masters'][0]]['vpn_ip'] }}:{{ kubernetes_port }} --discovery-token-unsafe-skip-ca-verification"
     when:
      - inventory_hostname != groups["masters"][0]
      - "'/usr/local/bin/kube-proxy' not in kube_proxy_running.stdout"

@@ -31,7 +31,7 @@ Port 8888
 {% if ansible_tun0 is defined %}
 Listen {{ ansible_tun0.ipv4.address }}
 {% else %}
-Listen {{ansible_eth0.ipv4.address}}
+Listen {{ansible_eth1.ipv4.address}}
 {% endif %}
 
 #

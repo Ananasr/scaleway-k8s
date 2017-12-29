@@ -1,8 +1,10 @@
 ---
 # Setting up all hosts
 - hosts: proxy:masters:workers
+  become: true
   tasks: [ ]
 
 - hosts: proxy:masters:workers
+  become: true
   roles:
     - heketi-gluster

@@ -4,8 +4,9 @@ metadata:
   namespace: kube-system
   name: kubernetes-dashboard
   annotations:
+    kubernetes.io/ingress.class: traefik
     # enable kube-lego for this ingress
-    kubernetes.io/tls-acme: "true"
+    #kubernetes.io/tls-acme: "true"
     {% if basic_auth == True %}
 ingress.kubernetes.io/auth-type: basic
     # name of the secret that contains the user/password definitions
@@ -16,10 +17,10 @@ ingress.kubernetes.io/auth-type: basic
 
 spec:
   # this enables tls for the specified domain names
-  tls:
-  - hosts:
-    - k8sdashboard.{{ domain_name }}
-    secretName: dashboard-tls
+  #tls:
+  #- hosts:
+  #  - k8sdashboard.{{ domain_name }}
+  #  secretName: dashboard-tls
   rules:
   - host: k8sdashboard.{{ domain_name }}
     http:

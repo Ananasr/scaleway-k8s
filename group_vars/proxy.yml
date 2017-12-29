@@ -1,2 +1,2 @@
-ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q root@$public_ip"'
+#ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q root@$public_ip"'
 keepalived_ip: "192.168.66.254"

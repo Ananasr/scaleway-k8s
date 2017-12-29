@@ -1,0 +1,61 @@
+---
+- name: traefik_ingress_controller | Getting node labels
+  command: "kubectl get nodes -l role=ingress-controller"
+  register: nodes
+  when: inventory_hostname == groups["masters"][0]
+
+- name: traefik_ingress_controller | Printing nodes
+  debug: var=nodes
+  when: inventory_hostname == groups["masters"][0]
+
+- name: traefik_ingress_controller | Labelling proxy nodes with role=ingress_controller
+  command: "kubectl label node {{ item }} role=ingress-controller"
+  with_items:
+    - "{{ groups['proxy'] }}"
+  when:
+    - inventory_hostname == groups["masters"][0]
+    - '"{{ item }}" not in nodes.stdout'
+
+- name: traefik_ingress_controller | Templating manifests
+  template:
+    src: "{{ item }}"
+    dest: "/tmp/{{ item | regex_replace('.j2', '') }}"
+  with_items:
+    #- default-backend-controller.yml.j2
+    #- default-backend-service.yml.j2
+    - traefik-ingress-clusterolebinding.yml.j2
+    - traefik-ingress-sa.yml.j2
+    - traefik-ingress-clusterole.yml.j2
+    - traefik-ingress-ds.yml.j2
+    - traefik-ingress-service.yml.j2
+  when: inventory_hostname == groups["masters"][0]
+
+- name: traefik_ingress_controller | Deploy the traefik_ingress_controller
+  kube:
+    name: "{{ item.name }}"
+    resource: "{{ item.type }}"
+    filename: "{{ item.file }}"
+    state: latest
+  with_items:
+    #- { 'name': 'default-http-backend', 'type': 'deploy', 'file': '/tmp/default-backend-controller.yml' }
+    #- { 'name': 'default-http-backend', 'type': 'svc', 'file': '/tmp/default-backend-service.yml' }
+    - { 'name': 'traefik-ingress', 'type': 'clusterrolebinding', 'file': '/tmp/traefik-ingress-clusterolebinding.yml' }
+    - { 'name': 'traefik-ingress', 'type': 'clusterrole', 'file': '/tmp/traefik-ingress-clusterole.yml' }
+    - { 'name': 'traefik-ingress', 'type': 'sa', 'file': '/tmp/traefik-ingress-sa.yml' }
+    - { 'name': 'traefik-ingress', 'type': 'ds', 'file': '/tmp/traefik-ingress-ds.yml' }
+    - { 'name': 'traefik-ingress', 'type': 'svc', 'file': '/tmp/traefik-ingress-service.yml' }
+  when: inventory_hostname == groups["masters"][0]
+
+    #- name: traefik_ingress_controller | Removing manifest
+    #  file:
+    #    path: "/tmp/{{ item }}"
+    #    state: absent
+    #  with_items:
+    #    #- default-backend-controller.yml
+    #    #- default-backend-service.yml
+    #    - traefik-ingress-clusterolebinding.yml
+    #    - traefik-ingress-sa.yml
+    #    - traefik-ingress-clusterole.yml
+    #    - traefik-ingress-ds.yml
+    #    - traefik-ingress-service.yml
+    #  when: inventory_hostname == groups["masters"][0]

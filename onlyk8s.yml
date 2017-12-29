@@ -1,17 +1,21 @@
 ---
 # Setting up all hosts
 - hosts: proxy:masters:workers
+  become: true
   tasks: [ ]
 
 # Manual etc when we have more than 1 masters
 - hosts: masters
+  become: true
   roles:
     - etcd
 
 - hosts: proxy:masters:workers
+  become: true
   roles:
     - kubernetes
 
 - hosts: proxy:masters:workers
+  become: true
   roles:
     - kubernetes-multimasters

@@ -5,3 +5,5 @@ dashboard_version: v1.8.1
 init_dashboard_image: gcr.io/google_containers/kubernetes-dashboard-init-amd64
 init_dashboard_version: v1.0.1
 basic_auth: True
+basic_auth_user: toto
+basic_auth_password: titi

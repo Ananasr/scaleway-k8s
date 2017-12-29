@@ -1,5 +1,7 @@
 # Deploying ingress controller
 - hosts: masters
+  become: true
   roles:
-    - ingress
-    - lego
+    - traefik
+    #- ingress
+    #- lego
